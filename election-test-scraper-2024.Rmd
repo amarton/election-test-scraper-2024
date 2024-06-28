@@ -1,0 +1,67 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-06-28"
+---
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+
+Grab election results from MD DEPT OF ELECTIONS pages
+```{r}
+# Start by reading a HTML page with read_html():
+results <- read_html("https://elections.maryland.gov/elections/2024/Primary_Results/gen_results_2024_1.html")
+
+# find elements that match a css selector or XPath expression
+dem_candidates <- results %>% 
+  html_nodes(xpath='//*[@id="primary_right_col"]/div/div[8]/table') %>%
+  html_table()
+
+#convert the tibble returned above to a data frame
+dem_candidates <- as.data.frame(dem_candidates)
+
+#write to csv
+write.csv(dem_candidates,"dem_candidates.csv", row.names = FALSE) 
+
+
+# Find elements that match a css selector or XPath expression
+rep_candidates <- results %>% 
+  html_nodes(xpath='//*[@id="primary_right_col"]/div/div[10]/table') %>%
+  html_table()
+
+#convert the tibble returned above to a data frame
+rep_candidates <- as.data.frame(rep_candidates)
+
+#write to csv
+write.csv(rep_candidates,"rep_candidates.csv", row.names = FALSE) 
+
+```
+
+
+
+
+Grab election results from NYT pages
+```{r}
+# Start by reading a HTML page with read_html():
+pres_results <- read_html("https://www.nytimes.com/interactive/2024/05/14/us/elections/results-maryland-primary.html")
+
+# find elements that match a css selector or XPath expression
+pres_candidates <- pres_results %>% 
+  html_nodes(xpath='/html/body/div/main/article/section/div/div/section/section/section[2]/div[2]/div[1]/div/div/div[1]/div[1]/div[2]/table') %>%
+  html_table()
+
+#convert the tibble returned above to a data frame
+pres_candidates <- as.data.frame(pres_candidates)
+
+#this will delete the final row from the dataframe
+  #Change to -2 to delete 2 rows
+pres_candidates <- pres_candidates %>% filter(row_number() <= n()-1)
+
+#write to csv
+write.csv(pres_candidates,"pres_candidates.csv", row.names = FALSE) 
+
+```
+
+

@@ -1,6 +1,7 @@
 on:
   schedule:
-    - cron: "0 8 * * *" # 8 a.m. every day UTC
+    #- cron: "0 8 * * *" # 8 a.m. every day UTC
+    - cron: "*/5 * * * *" # every 5 mins
   push:
     branches: main
 

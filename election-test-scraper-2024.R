@@ -64,3 +64,27 @@ pres_candidates$Votes <- gsub(',', '', pres_candidates$Votes)
 #write to csv
 write.csv(pres_candidates,"pres_candidates.csv", row.names = FALSE) 
 
+
+# Start by reading a HTML page with read_html():
+test_results <- read_html("https://amarton.github.io/your-name-jour352/test-table.html")
+
+# find elements that match a css selector or XPath expression
+test_candidates <- test_results %>% 
+  html_nodes(xpath='/html/body/table') %>%
+  html_table()
+
+#convert the tibble returned above to a data frame
+test_candidates <- as.data.frame(test_candidates)
+
+
+# remove the commas from the column votes
+test_candidates$Total <- gsub(',', '', test_candidates$Total)
+
+#this will delete the final row from the dataframe
+  #Change to -2 to delete 2 rows
+test_candidates <- test_candidates %>% filter(row_number() <= n()-1)
+
+
+#write to csv
+write.csv(test_candidates,"test_candidates.csv", row.names = FALSE) 
+
